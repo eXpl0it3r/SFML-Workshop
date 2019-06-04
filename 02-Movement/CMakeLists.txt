@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.1)
 
-project(01-Setup)
+project(02-Movement)
 
 # Used for local testing
 #set(SFML_STATIC_LIBRARIES TRUE)
@@ -16,5 +16,5 @@ project(01-Setup)
 set (CMAKE_CXX_STANDARD 17)
 
 find_package(SFML 2 COMPONENTS graphics REQUIRED)
-add_executable(01-Setup src/main.cpp)
-target_link_libraries(01-Setup sfml-graphics)
+add_executable(02-Movement src/main.cpp)
+target_link_libraries(02-Movement sfml-graphics)

@@ -9,11 +9,11 @@ int main()
 	rectangle.setFillColor(sf::Color::Green);
 	rectangle.setPosition({ 50.f, 50.f });
 
-	while(window.isOpen())
+	while (window.isOpen())
 	{
-		for(auto event = sf::Event{}; window.pollEvent(event);)
+		for (auto event = sf::Event{}; window.pollEvent(event);)
 		{
-			if(event.type == sf::Event::Closed)
+			if (event.type == sf::Event::Closed)
 			{
 				window.close();
 			}
