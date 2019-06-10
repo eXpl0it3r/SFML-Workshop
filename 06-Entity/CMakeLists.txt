@@ -16,5 +16,5 @@ project(06-Entity)
 set (CMAKE_CXX_STANDARD 17)
 
 find_package(SFML 2 COMPONENTS graphics REQUIRED)
-add_executable(06-Entity src/main.cpp src/Sokoban.cpp src/Map.cpp)
+add_executable(06-Entity src/main.cpp src/Sokoban.cpp src/Map.cpp src/Box.cpp)
 target_link_libraries(06-Entity sfml-graphics)

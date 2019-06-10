@@ -151,7 +151,7 @@
     <ClInclude Include="..\src\Sokoban.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\assets\tilesheet.png">
+    <Image Include="..\..\assets\tilesheet.png">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </Image>
   </ItemGroup>

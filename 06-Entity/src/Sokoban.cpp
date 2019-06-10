@@ -4,7 +4,7 @@ Sokoban::Sokoban() :
 	m_window_size{ 640u, 640u },
 	m_distance{ 64.f },
 	m_tile_size{ m_distance, m_distance },
-	m_window{ sf::VideoMode{m_window_size.x, m_window_size.y}, "05 - Map - SFML Workshop" },
+	m_window{ sf::VideoMode{m_window_size.x, m_window_size.y}, "06 - Entity - SFML Workshop" },
 	m_player{ m_tilesheet }
 {
 	m_window.setFramerateLimit(60);
@@ -16,6 +16,7 @@ Sokoban::Sokoban() :
 
 	init_player();
 	init_map();
+	init_boxes();
 }
 
 void Sokoban::run()
@@ -43,18 +44,30 @@ void Sokoban::handle_events()
 void Sokoban::update()
 {
 	const auto next_position = m_player.getPosition() + (sf::Vector2f{ m_direction } *m_distance);
-	m_direction = sf::Vector2i{};
+	const std::set<int> collision_set = { TileTypes::Empty, TileTypes::BrickWall, TileTypes::FloorBrown };
 
-	if (check_window_bounds(next_position) && !m_map.check_collision(next_position, { 0, 85, 90 }))
+	const auto boxes_allow_movement = update_boxes(next_position, collision_set);
+
+	if (check_window_bounds(next_position)
+		&& !m_map.check_collision(next_position, collision_set)
+		&& boxes_allow_movement)
 	{
 		m_player.setPosition(next_position);
 	}
+
+	update_box_visuals();
+
+	m_direction = sf::Vector2i{};
 }
 
 void Sokoban::render()
 {
 	m_window.clear(sf::Color{ 0xAA733CFF });
 	m_window.draw(m_map);
+	for (auto& box : m_boxes)
+	{
+		m_window.draw(box);
+	}
 	m_window.draw(m_player);
 	m_window.display();
 }
@@ -86,6 +99,19 @@ void Sokoban::init_map()
 		90,  90,  90,  90,  90,  90,  90,  90,  90,  90,
 	};
 	m_map.load(m_tilesheet, { 64u, 64u }, data.data(), { 10u, 10u });
+}
+
+void Sokoban::init_boxes()
+{
+	m_boxes.emplace_back(m_tilesheet, sf::Vector2f{ m_tile_size.x * 4.f, m_tile_size.y * 2.f });
+	m_boxes.emplace_back(m_tilesheet, sf::Vector2f{ m_tile_size.x * 5.f, m_tile_size.y * 3.f });
+	m_boxes.emplace_back(m_tilesheet, sf::Vector2f{ m_tile_size.x * 5.f, m_tile_size.y * 4.f });
+	m_boxes.emplace_back(m_tilesheet, sf::Vector2f{ m_tile_size.x * 5.f, m_tile_size.y * 6.f });
+	m_boxes.emplace_back(m_tilesheet, sf::Vector2f{ m_tile_size.x * 4.f, m_tile_size.y * 6.f });
+	m_boxes.emplace_back(m_tilesheet, sf::Vector2f{ m_tile_size.x * 2.f, m_tile_size.y * 6.f });
+	m_boxes.emplace_back(m_tilesheet, sf::Vector2f{ m_tile_size.x * 6.f, m_tile_size.y * 6.f });
+
+	update_box_visuals();
 }
 
 void Sokoban::handle_keyboard_input(const sf::Event event)
@@ -142,4 +168,55 @@ bool Sokoban::check_window_bounds(const sf::Vector2<float> next_position) const
 {
 	return next_position.x >= 0.f && next_position.x <= m_window_size.x - m_distance
 		&& next_position.y >= 0.f && next_position.y <= m_window_size.y - m_distance;
+}
+
+bool Sokoban::update_boxes(const sf::Vector2<float> next_position, const std::set<int>& collision_set)
+{
+	for (auto& next_box : m_boxes)
+	{
+		if (are_equal(next_position, next_box.get_position()))
+		{
+			const auto next_position_plus_one = m_player.getPosition() + (sf::Vector2f{ m_direction } *m_distance * 2.f);
+			for (auto& next_box_plus_one : m_boxes)
+			{
+				if (are_equal(next_position_plus_one, next_box_plus_one.get_position())
+					|| m_map.check_collision(next_position_plus_one, collision_set))
+				{
+					return false;
+				}
+			}
+
+			next_box.set_position(next_position_plus_one);
+		}
+	}
+
+	return true;
+}
+
+void Sokoban::update_box_visuals()
+{
+	for (auto& box : m_boxes)
+	{
+		const auto& position = box.get_position();
+		const auto tile_position = sf::Vector2<std::size_t>{
+			static_cast<std::size_t>(position.x / m_tile_size.x),
+			static_cast<std::size_t>(position.y / m_tile_size.x)
+		};
+		const auto tile_number = m_map.get_tile_number(tile_position);
+
+		if (tile_number == TileTypes::TargetGrey)
+		{
+			box.set_state(Box::State::OnTargetTile);
+		}
+		else
+		{
+			box.set_state(Box::State::OnNormalTile);
+		}
+	}
+}
+
+bool Sokoban::are_equal(const sf::Vector2<float> vector_one, const sf::Vector2<float> vector_two) const
+{
+	return std::abs(vector_one.x - vector_two.x) <= std::numeric_limits<float>::epsilon()
+		&& std::abs(vector_one.y - vector_two.y) <= std::numeric_limits<float>::epsilon();
 }

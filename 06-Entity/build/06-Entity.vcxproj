@@ -20,10 +20,10 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
-    <RootNamespace>My05Map</RootNamespace>
+    <RootNamespace>My06Entity</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>05-Map</ProjectName>
-    <ProjectGuid>{3880ADD5-DAB3-422E-9375-6B95508D7432}</ProjectGuid>
+    <ProjectName>06-Entity</ProjectName>
+    <ProjectGuid>{83EB0F3A-CB90-4040-9D71-FAF8F2FB9866}</ProjectGuid>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -141,6 +141,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\Box.cpp" />
     <ClCompile Include="..\src\Map.cpp" />
     <ClCompile Include="..\src\Sokoban.cpp" />
     <ClCompile Include="..\src\main.cpp" />
@@ -149,13 +150,12 @@
     <Text Include="..\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\Box.hpp" />
     <ClInclude Include="..\src\Map.hpp" />
     <ClInclude Include="..\src\Sokoban.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\..\assets\tilesheet.png">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </Image>
+    <Image Include="..\..\assets\tilesheet.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
