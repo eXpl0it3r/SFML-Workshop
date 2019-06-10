@@ -1,15 +1,20 @@
 #include "Sokoban.hpp"
 
 Sokoban::Sokoban() :
-	m_window_size{ 700u, 700u },
-	m_distance{ 100.f },
+	m_window_size{ 640, 640 },
+	m_distance{ 64.f },
+	m_tile_size{ m_distance, m_distance },
 	m_window{ sf::VideoMode{m_window_size.x, m_window_size.y}, "04 - Sprite & Texture - SFML Workshop" },
-	m_rectangle{ {100.f, 100.f} }
+	m_player{ m_tilesheet }
 {
 	m_window.setFramerateLimit(60);
 
-	m_rectangle.setFillColor(sf::Color::Green);
-	m_rectangle.setPosition({ 300.f, 600.f });
+	if (!m_tilesheet.loadFromFile("assets/tilesheet.png"))
+	{
+		throw std::runtime_error{ "Unable to load asset 'assets/tilesheet.png'" };
+	}
+
+	init_player();
 }
 
 void Sokoban::run()
@@ -36,20 +41,31 @@ void Sokoban::handle_events()
 
 void Sokoban::update()
 {
-	const auto next_position = m_rectangle.getPosition() + (sf::Vector2f{ m_direction } *m_distance);
+	const auto next_position = m_player.getPosition() + (sf::Vector2f{ m_direction } *m_distance);
 	m_direction = sf::Vector2i{};
 
-	if (next_position.x >= 0.f && next_position.x <= m_window_size.x - 100.f && next_position.y >= 0.f && next_position.y <= m_window_size.y - 100.f)
+	if (check_window_bounds(next_position))
 	{
-		m_rectangle.setPosition(next_position);
+		m_player.setPosition(next_position);
 	}
 }
 
 void Sokoban::render()
 {
 	m_window.clear();
-	m_window.draw(m_rectangle);
+	m_window.draw(m_player);
 	m_window.display();
+}
+
+void Sokoban::init_player()
+{
+	m_player.setPosition(m_tile_size * 2.f);
+	m_player.setTextureRect({
+		0,
+		5 * static_cast<int>(m_tile_size.y),
+		static_cast<int>(m_tile_size.x),
+		static_cast<int>(m_tile_size.y)
+		});
 }
 
 void Sokoban::handle_keyboard_input(const sf::Event event)
@@ -100,4 +116,10 @@ void Sokoban::handle_keyboard_input(const sf::Event event)
 			m_key_states[sf::Keyboard::Down] = false;
 		}
 	}
+}
+
+bool Sokoban::check_window_bounds(const sf::Vector2<float> next_position) const
+{
+	return next_position.x >= 0.f && next_position.x <= m_window_size.x - m_tile_size.x
+		&& next_position.y >= 0.f && next_position.y <= m_window_size.y - m_tile_size.y;
 }

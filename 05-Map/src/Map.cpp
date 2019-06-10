@@ -1,19 +1,13 @@
 #include "Map.hpp"
 
-bool Map::load(const std::string& tileset_path, const sf::Vector2u tile_size, const int* tile_map, const sf::Vector2<std::size_t> map_size)
+void Map::load(const sf::Texture& tilesheet, const sf::Vector2u tile_size,
+	const int* tile_map, const sf::Vector2<std::size_t> map_size)
 {
 	m_tile_size = tile_size;
 	m_tile_map = std::vector<int>{ tile_map, tile_map + (map_size.x * map_size.y) };
 	m_map_size = map_size;
 
-	if (!m_tileset.loadFromFile(tileset_path))
-	{
-		return false;
-	}
-
-	generate_map();
-
-	return true;
+	generate_map(tilesheet);
 }
 
 bool Map::check_collision(const sf::Vector2f next_position, std::set<int> collision_values)
@@ -24,7 +18,7 @@ bool Map::check_collision(const sf::Vector2f next_position, std::set<int> collis
 	return collision_values.find(m_tile_map[x + y * m_map_size.x]) != collision_values.end();
 }
 
-void Map::generate_map()
+void Map::generate_map(const sf::Texture& tilesheet)
 {
 	m_sprites.resize(m_map_size.x * m_map_size.y);
 
@@ -33,12 +27,15 @@ void Map::generate_map()
 		for (std::size_t y = 0; y < m_map_size.y; ++y)
 		{
 			const auto tile_number = m_tile_map[x + y * m_map_size.x];
-			const auto texture_u = tile_number % (m_tileset.getSize().x / m_tile_size.x);
-			const auto texture_v = tile_number / (m_tileset.getSize().x / m_tile_size.x);
+			const auto texture_u = tile_number % (tilesheet.getSize().x / m_tile_size.x);
+			const auto texture_v = tile_number / (tilesheet.getSize().x / m_tile_size.x);
 
 			auto& sprite = m_sprites[x + y * m_map_size.x];
-			sprite.setTexture(m_tileset);
-			sprite.setPosition({ static_cast<float>(x * m_tile_size.x), static_cast<float>(y * m_tile_size.y) });
+			sprite.setTexture(tilesheet);
+			sprite.setPosition({
+				static_cast<float>(x * m_tile_size.x),
+				static_cast<float>(y * m_tile_size.y)
+				});
 			sprite.setTextureRect({
 				static_cast<int>(texture_u * m_tile_size.x),
 				static_cast<int>(texture_v * m_tile_size.y),
