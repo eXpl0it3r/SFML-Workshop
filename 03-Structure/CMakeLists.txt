@@ -16,5 +16,5 @@ project(03-Structure)
 set (CMAKE_CXX_STANDARD 17)
 
 find_package(SFML 2 COMPONENTS graphics REQUIRED)
-add_executable(03-Structure src/main.cpp src/Frogger.cpp)
+add_executable(03-Structure src/main.cpp src/Sokoban.cpp)
 target_link_libraries(03-Structure sfml-graphics)

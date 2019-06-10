@@ -1,7 +1,7 @@
-#include "Frogger.hpp"
+#include "Sokoban.hpp"
 
 int main()
 {
-	auto game = Frogger{};
+	auto game = Sokoban{};
 	game.run();
 }
