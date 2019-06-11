@@ -4,15 +4,11 @@ Sokoban::Sokoban() :
 	m_window_size{ 640, 640 },
 	m_distance{ 64.f },
 	m_tile_size{ m_distance, m_distance },
-	m_window{ sf::VideoMode{m_window_size.x, m_window_size.y}, "04 - Sprite & Texture - SFML Workshop" },
-	m_player{ m_tilesheet }
+	m_window{ sf::VideoMode{m_window_size.x, m_window_size.y}, "04 - Sprite & Texture - SFML Workshop" }
 {
 	m_window.setFramerateLimit(60);
 
-	if (!m_tilesheet.loadFromFile("assets/tilesheet.png"))
-	{
-		throw std::runtime_error{ "Unable to load asset 'assets/tilesheet.png'" };
-	}
+	m_texture_holder.load("tilesheet", "assets/tilesheet.png");
 
 	init_player();
 }
@@ -59,6 +55,7 @@ void Sokoban::render()
 
 void Sokoban::init_player()
 {
+	m_player.setTexture(m_texture_holder.get("tilesheet"));
 	m_player.setPosition(m_tile_size * 2.f);
 	m_player.setTextureRect({
 		0,

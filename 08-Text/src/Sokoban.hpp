@@ -3,6 +3,7 @@
 #include <SFML/Audio.hpp>
 #include "Map.hpp"
 #include "Box.hpp"
+#include "ResourceHolder.hpp"
 
 class Sokoban
 {
@@ -48,17 +49,16 @@ private:
 	std::map<sf::Keyboard::Key, bool> m_key_states;
 
 	sf::RenderWindow m_window;
-	sf::Texture m_tilesheet;
+	ResourceHolder<sf::Texture> m_texture_holder;
 	sf::Sprite m_player;
 	Map m_map;
 	std::vector<Box> m_boxes;
 
 	sf::Music m_music;
-	sf::SoundBuffer m_sound_buffer_step;
-	sf::SoundBuffer m_sound_buffer_box;
+	ResourceHolder<sf::SoundBuffer> m_sound_holder;
 	sf::Sound m_sound_step;
 	sf::Sound m_sound_box;
 
-	sf::Font m_font;
+	ResourceHolder<sf::Font> m_font_holder;
 	sf::Text m_text;
 };

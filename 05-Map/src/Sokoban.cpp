@@ -4,15 +4,11 @@ Sokoban::Sokoban() :
 	m_window_size{ 640u, 640u },
 	m_distance{ 64.f },
 	m_tile_size{ m_distance, m_distance },
-	m_window{ sf::VideoMode{m_window_size.x, m_window_size.y}, "05 - Map - SFML Workshop" },
-	m_player{ m_tilesheet }
+	m_window{ sf::VideoMode{m_window_size.x, m_window_size.y}, "05 - Map - SFML Workshop" }
 {
 	m_window.setFramerateLimit(60);
 
-	if (!m_tilesheet.loadFromFile("assets/tilesheet.png"))
-	{
-		throw std::runtime_error{ "Unable to load asset 'assets/tilesheet.png'" };
-	}
+	m_texture_holder.load("tilesheet", "assets/tilesheet.png");
 
 	init_player();
 	init_map();
@@ -61,6 +57,7 @@ void Sokoban::render()
 
 void Sokoban::init_player()
 {
+	m_player.setTexture(m_texture_holder.get("tilesheet"));
 	m_player.setPosition(m_tile_size * 2.f);
 	m_player.setTextureRect({
 		0,
@@ -85,7 +82,7 @@ void Sokoban::init_map()
 		90,  85,  85,  85,  85,  85,  85,  85,  85,  90,
 		90,  90,  90,  90,  90,  90,  90,  90,  90,  90,
 	};
-	m_map.load(m_tilesheet, { 64u, 64u }, data.data(), { 10u, 10u });
+	m_map.load(m_texture_holder.get("tilesheet"), { 64u, 64u }, data.data(), { 10u, 10u });
 }
 
 void Sokoban::handle_keyboard_input(const sf::Event event)

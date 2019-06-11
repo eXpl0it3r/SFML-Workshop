@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "Map.hpp"
 #include "Box.hpp"
+#include "ResourceHolder.hpp"
 
 class Sokoban
 {
@@ -42,7 +43,7 @@ private:
 	sf::Vector2f m_tile_size;
 	std::map<sf::Keyboard::Key, bool> m_key_states;
 	sf::RenderWindow m_window;
-	sf::Texture m_tilesheet;
+	ResourceHolder<sf::Texture> m_texture_holder;
 	sf::Sprite m_player;
 	Map m_map;
 	std::vector<Box> m_boxes;

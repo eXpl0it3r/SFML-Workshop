@@ -4,15 +4,11 @@ Sokoban::Sokoban() :
 	m_window_size{ 640u, 640u },
 	m_distance{ 64.f },
 	m_tile_size{ m_distance, m_distance },
-	m_window{ sf::VideoMode{m_window_size.x, m_window_size.y}, "07 - Audio - SFML Workshop" },
-	m_player{ m_tilesheet }
+	m_window{ sf::VideoMode{m_window_size.x, m_window_size.y}, "07 - Audio - SFML Workshop" }
 {
 	m_window.setFramerateLimit(60);
 
-	if (!m_tilesheet.loadFromFile("assets/tilesheet.png"))
-	{
-		throw std::runtime_error{ "Unable to load asset 'assets/tilesheet.png'" };
-	}
+	m_texture_holder.load("tilesheet", "assets/tilesheet.png");
 
 	init_player();
 	init_map();
@@ -80,6 +76,7 @@ void Sokoban::render()
 
 void Sokoban::init_player()
 {
+	m_player.setTexture(m_texture_holder.get("tilesheet"));
 	m_player.setPosition(m_tile_size * 2.f);
 	m_player.setTextureRect({
 		0,
@@ -104,18 +101,20 @@ void Sokoban::init_map()
 		90,  85,  85,  85,  85,  85,  85,  85,  85,  90,
 		90,  90,  90,  90,  90,  90,  90,  90,  90,  90,
 	};
-	m_map.load(m_tilesheet, { 64u, 64u }, data.data(), { 10u, 10u });
+	m_map.load(m_texture_holder.get("tilesheet"), { 64u, 64u }, data.data(), { 10u, 10u });
 }
 
 void Sokoban::init_boxes()
 {
-	m_boxes.emplace_back(m_tilesheet, sf::Vector2f{ m_tile_size.x * 4.f, m_tile_size.y * 2.f });
-	m_boxes.emplace_back(m_tilesheet, sf::Vector2f{ m_tile_size.x * 5.f, m_tile_size.y * 3.f });
-	m_boxes.emplace_back(m_tilesheet, sf::Vector2f{ m_tile_size.x * 5.f, m_tile_size.y * 4.f });
-	m_boxes.emplace_back(m_tilesheet, sf::Vector2f{ m_tile_size.x * 5.f, m_tile_size.y * 6.f });
-	m_boxes.emplace_back(m_tilesheet, sf::Vector2f{ m_tile_size.x * 4.f, m_tile_size.y * 6.f });
-	m_boxes.emplace_back(m_tilesheet, sf::Vector2f{ m_tile_size.x * 2.f, m_tile_size.y * 6.f });
-	m_boxes.emplace_back(m_tilesheet, sf::Vector2f{ m_tile_size.x * 6.f, m_tile_size.y * 6.f });
+	auto& tilesheet = m_texture_holder.get("tilesheet");
+
+	m_boxes.emplace_back(tilesheet, sf::Vector2f{ m_tile_size.x * 4.f, m_tile_size.y * 2.f });
+	m_boxes.emplace_back(tilesheet, sf::Vector2f{ m_tile_size.x * 5.f, m_tile_size.y * 3.f });
+	m_boxes.emplace_back(tilesheet, sf::Vector2f{ m_tile_size.x * 5.f, m_tile_size.y * 4.f });
+	m_boxes.emplace_back(tilesheet, sf::Vector2f{ m_tile_size.x * 5.f, m_tile_size.y * 6.f });
+	m_boxes.emplace_back(tilesheet, sf::Vector2f{ m_tile_size.x * 4.f, m_tile_size.y * 6.f });
+	m_boxes.emplace_back(tilesheet, sf::Vector2f{ m_tile_size.x * 2.f, m_tile_size.y * 6.f });
+	m_boxes.emplace_back(tilesheet, sf::Vector2f{ m_tile_size.x * 6.f, m_tile_size.y * 6.f });
 
 	update_box_visuals();
 }
@@ -132,17 +131,11 @@ void Sokoban::init_music()
 
 void Sokoban::init_sound()
 {
-	if (!m_sound_buffer_step.loadFromFile("assets/step.ogg"))
-	{
-		throw std::runtime_error{ "Unable to load asset 'assets/step.ogg'" };
-	}
-	m_sound_step.setBuffer(m_sound_buffer_step);
+	m_sound_holder.load("step", "assets/step.ogg");
+	m_sound_step.setBuffer(m_sound_holder.get("step"));
 
-	if (!m_sound_buffer_box.loadFromFile("assets/box.ogg"))
-	{
-		throw std::runtime_error{ "Unable to load asset 'assets/box.ogg'" };
-	}
-	m_sound_box.setBuffer(m_sound_buffer_box);
+	m_sound_holder.load("box", "assets/box.ogg");
+	m_sound_box.setBuffer(m_sound_holder.get("box"));
 }
 
 void Sokoban::handle_keyboard_input(const sf::Event event)

@@ -150,6 +150,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Map.hpp" />
+    <ClInclude Include="..\src\ResourceHolder.hpp" />
     <ClInclude Include="..\src\Sokoban.hpp" />
   </ItemGroup>
   <ItemGroup>
