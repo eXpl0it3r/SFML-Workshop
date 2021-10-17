@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.1)
 
-project(06-Entity)
+project(05-Map)
 
 # Used for local testing
 #set(SFML_STATIC_LIBRARIES TRUE)
@@ -18,5 +18,5 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(SFML 2 COMPONENTS graphics REQUIRED)
-add_executable(06-Entity src/main.cpp src/Sokoban.cpp src/Map.cpp)
-target_link_libraries(06-Entity sfml-graphics)
+add_executable(05-Map src/main.cpp src/Sokoban.cpp src/Map.cpp)
+target_link_libraries(05-Map sfml-graphics)
