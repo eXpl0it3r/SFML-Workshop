@@ -2,6 +2,6 @@
 
 int main()
 {
-	auto game = Sokoban{};
-	game.run();
+    auto game = Sokoban{};
+    game.run();
 }

@@ -13,7 +13,9 @@ project(03-Structure)
 #    endforeach()
 #endif()
 
-set (CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(SFML 2 COMPONENTS graphics REQUIRED)
 add_executable(03-Structure src/main.cpp src/Sokoban.cpp)
