@@ -1,5 +1,7 @@
 #include "Sokoban.hpp"
 
+#include <cmath>
+
 Sokoban::Sokoban() :
     m_window_size{ 640u, 640u },
     m_distance{ 64.f },
